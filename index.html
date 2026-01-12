@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Google Meet Countdown</title>
+
+<style>
+/* poori screen ke liye */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* background image */
+body {
+    background-image: url("bg_1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+}
+
+/* center content */
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    text-align: center;
+}
+
+/* link hidden initially */
+#meetLink {
+    display: none;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #00ff99;
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Meeting Countdown</h1>
+    <h2 id="countdown">Loading...</h2>
+
+    <a id="meetLink" href="https://teams.microsoft.com/meet/25757875892755?p=1mFZx8w8wkPEigaVCf" target="_blank">
+        Join Meet
+    </a>
+</div>
+
+<script>
+// 👉 YAHAN TIME SET KARO
+// (Year, Month-1, Date, Hour, Minute, Second)
+
+let meetingTime = new Date(2026, 0, 12, 15, 45, 0).getTime();
+
+let timer = setInterval(function () {
+    let now = new Date().getTime();
+    let diff = meetingTime - now;
+
+    if (diff <= 0) {
+        clearInterval(timer);
+        document.getElementById("countdown").innerHTML = "Meeting shuru ho gayi!";
+        document.getElementById("meetLink").style.display = "inline-block";
+        return;
+    }
+
+    let hours = Math.floor(diff / (1000 * 60 * 60));
+    let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML =
+        hours + "h " + minutes + "m " + seconds + "s";
+}, 1000);
+</script>
+
+</body>
+</html>
