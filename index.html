@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Meeting Countdown</title>
+
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* background image */
+body {
+    background-image: url("bg_1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+}
+
+/* center content */
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    text-align: center;
+}
+
+/* heading */
+.container h1 {
+    font-size: 100px;
+    margin-bottom: 20px;
+    color: #ffff00;
+    text-shadow: 0 0 15px black;
+}
+
+/* countdown timer */
+#countdown {
+    font-size: 80px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #00ff99;
+    text-shadow: 0 0 15px black;
+}
+
+/* join meet button */
+#meetLink {
+    display: none;
+    margin-top: 30px;
+    padding: 14px 30px;
+    background: #00ff99;
+    color: black;
+    text-decoration: none;
+    font-size: 24px;
+    border-radius: 8px;
+}
+
+/* 🎈 BALLOON LAYER */
+#balloon-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.balloon {
+    position: absolute;
+    bottom: -120px;
+    pointer-events: auto;
+    cursor: pointer;
+    animation-name: zigzag;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+/* zigzag movement */
+@keyframes zigzag {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-40px, -30vh); }
+    50%  { transform: translate(40px, -60vh); }
+    75%  { transform: translate(-30px, -90vh); }
+    100% { transform: translate(30px, -130vh); }
+}
+
+/* POP effect */
+.balloon.pop {
+    animation: pop 0.25s ease-out forwards !important;
+}
+
+@keyframes pop {
+    from { transform: scale(1); opacity: 1; }
+    to   { transform: scale(1.6); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="balloon-layer"></div>
+
+<div class="container">
+    <h1>Meeting Countdown</h1>
+    <h2 id="countdown">Loading...</h2>
+
+    <a id="meetLink"
+       href="https://teams.microsoft.com/meet/25014105792689?p=7AZ2CPk5BvCyZEhms5"
+       target="_blank">
+        Join Meet
+    </a>
+</div>
+
+<script>
+/* 🎈 BALLOON SCRIPT */
+const balloonImages = [
+    "red.png",
+    "yellow.png",
+    "green.png",
+    "violet.png",
+    "purple.png"
+];
+
+const layer = document.getElementById("balloon-layer");
+
+function createBalloon() {
+    const b = document.createElement("img");
+    b.src = balloonImages[Math.floor(Math.random() * balloonImages.length)];
+    b.className = "balloon";
+
+    b.style.left = Math.random() * 90 + "vw";
+    b.style.width = 40 + Math.random() * 40 + "px";
+    b.style.animationDuration = 6 + Math.random() * 4 + "s";
+
+    b.onclick = () => {
+        b.classList.add("pop");
+        setTimeout(() => b.remove(), 250);
+    };
+
+    layer.appendChild(b);
+    setTimeout(() => b.remove(), 12000);
+}
+
+setInterval(createBalloon, 800);
+
+/* ⏱ COUNTDOWN SCRIPT */
+let meetingTime = new Date(2026, 0, 29, 14, 45, 0).getTime();
+
+let timer = setInterval(function () {
+    let now = new Date().getTime();
+    let diff = meetingTime - now;
+
+    if (diff <= 0) {
+        clearInterval(timer);
+        document.getElementById("countdown").innerHTML = "Meeting Started";
+        document.getElementById("meetLink").style.display = "inline-block";
+        return;
+    }
+
+    let hours = Math.floor(diff / (1000 * 60 * 60));
+    let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML =
+        hours + "h " + minutes + "m " + seconds + "s";
+}, 1000);
+</script>
+
+</body>
+</html>
